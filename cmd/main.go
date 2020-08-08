@@ -126,6 +126,10 @@ func removeOrphanedPods(client *k8s.Client) error {
 	}
 
 	for _, p := range pods {
+		// Ignore pods with no node
+		if len(p.Spec.NodeName) == 0 {
+			continue
+		}
 		log.Printf("Checking if node %s for pod %s/%s exists", p.Spec.NodeName, p.Namespace, p.Name)
 		found := false
 		for _, n := range nodes {
